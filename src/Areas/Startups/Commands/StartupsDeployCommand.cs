@@ -62,14 +62,14 @@ public sealed class StartupsDeployCommand(ILogger<StartupsDeployCommand> logger)
             {
                 return context.Response;
             }
+
             _logger.LogInformation("Starting deployment to storage account {StorageAccount}", options.StorageAccount);
 
-            var service = context.GetService<IStartupsService>();
-
-            var results = await service.DeployStaticWebAsync(options.Subscription!, options.ResourceGroup!, options.StorageAccount!, options.SourcePath!);
+            var startupsService = context.GetService<IStartupsService>();
+            var result = await startupsService.DeployStaticWebAsync(options.Tenant!, options.Subscription!, options.StorageAccount!, options.ResourceGroup!, options.SourcePath!, options.RetryPolicy!);
 
             _logger.LogInformation("Successfully deployed to storage account {StorageAccount}", options.StorageAccount);
-            context.Response.Results = ResponseResult.Create(results, DeployJsonContext.Default.StartupsDeployResources);
+            context.Response.Results = ResponseResult.Create(result, DeployJsonContext.Default.StartupsDeployResources);
         }
         catch (Exception ex)
         {
