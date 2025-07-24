@@ -17,6 +17,7 @@ public sealed class StartupsDeployCommand(ILogger<StartupsDeployCommand> logger)
     private readonly ILogger<StartupsDeployCommand> _logger = logger;
     private readonly Option<string> _storageAccount = StartupsOptionDefinitions.StorageAccount;
     private readonly Option<string> _resourceGroup = StartupsOptionDefinitions.ResourceGroup;
+    private readonly Option<string> _resourceGroup = StartupsOptionDefinitions.ResourceGroup;
     private readonly Option<string> _sourcePath = StartupsOptionDefinitions.SourcePath;
     public override string Name => "deploy";
     public override string Description =>
@@ -35,21 +36,24 @@ public sealed class StartupsDeployCommand(ILogger<StartupsDeployCommand> logger)
         base.RegisterOptions(command);
         command.AddOption(_storageAccount);
         command.AddOption(_resourceGroup);
+        command.AddOption(_resourceGroup);
         command.AddOption(_sourcePath);
     }
 
     protected override StartupsDeployOptions BindOptions(ParseResult parseResult)
     {
         var options = base.BindOptions(parseResult);
+        options.Subscription = parseResult.GetValueForOption(_subscription);
+        options.ResourceGroup = parseResult.GetValueForOption(_resourceGroup);
         options.StorageAccount = parseResult.GetValueForOption(_storageAccount);
         options.SourcePath = parseResult.GetValueForOption(_sourcePath);
-        options.ResourceGroup = parseResult.GetValueForOption(_resourceGroup);
         return options;
     }
 
     [McpServerTool(Destructive = false, ReadOnly = true, Title = CommandTitle)]
     public override async Task<CommandResponse> ExecuteAsync(CommandContext context, ParseResult parseResult)
     {
+        var options = BindOptions(parseResult);
         var options = BindOptions(parseResult);
 
         try
@@ -58,17 +62,18 @@ public sealed class StartupsDeployCommand(ILogger<StartupsDeployCommand> logger)
             {
                 return context.Response;
             }
-
             _logger.LogInformation("Starting deployment to storage account {StorageAccount}", options.StorageAccount);
 
-            var startupsService = context.GetService<IStartupsService>();
-            var result = await startupsService.DeployStaticWebAsync(options.Tenant!, options.Subscription!, options.StorageAccount!, options.ResourceGroup!, options.SourcePath!, options.RetryPolicy!);
+            var service = context.GetService<IStartupsService>();
+
+            var results = await service.DeployStaticWebAsync(options.Subscription!, options.ResourceGroup!, options.StorageAccount!, options.SourcePath!);
 
             _logger.LogInformation("Successfully deployed to storage account {StorageAccount}", options.StorageAccount);
-            context.Response.Results = ResponseResult.Create(result, DeployJsonContext.Default.StartupsDeployResources);
+            context.Response.Results = ResponseResult.Create(results, DeployJsonContext.Default.StartupsDeployResources);
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error deploying static website to {StorageAccount}", options.StorageAccount);
             _logger.LogError(ex, "Error deploying static website to {StorageAccount}", options.StorageAccount);
             HandleException(context, ex);
         }
