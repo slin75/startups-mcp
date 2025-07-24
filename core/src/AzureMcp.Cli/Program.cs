@@ -17,9 +17,17 @@ using Microsoft.Extensions.Logging;
 internal class Program
 {
     private static IAreaSetup[] Areas = RegisterAreas();
-
+    private static bool AttachDebugger { get; } = true;
     private static async Task<int> Main(string[] args)
     {
+#if DEBUG
+        if (AttachDebugger)
+        {
+            while (!Debugger.IsAttached)
+                Thread.Sleep(1000);
+            Debugger.Break();
+        }
+#endif
         try
         {
             AzureMcp.Core.Areas.Server.Commands.ServiceStartCommand.ConfigureServices = ConfigureServices;
@@ -86,7 +94,7 @@ internal class Program
             new AzureMcp.Search.SearchSetup(),
             new AzureMcp.ServiceBus.ServiceBusSetup(),
             new AzureMcp.Sql.SqlSetup(),
-            new AzureMcp.Areas.Startups.StartupsSetup()
+            new AzureMcp.Areas.Startups.StartupsSetup(),
             new AzureMcp.Storage.StorageSetup(),
             new AzureMcp.VirtualDesktop.VirtualDesktopSetup(),
             new AzureMcp.Workbooks.WorkbooksSetup(),
