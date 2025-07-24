@@ -22,7 +22,7 @@ public sealed class StartupsDeployCommand(ILogger<StartupsDeployCommand> logger)
     public override string Name => "deploy";
     public override string Description =>
         """
-        Deploy static web resources for startups. Requires subscription {OptionDefinitions.Common.SubscriptionName},
+        Deploy static web resources for startups. Requires subscription,
         resource group, storage account name, and source directory path. Configures static website hosting
         and uploads content from the specified directory.
         """;
@@ -46,6 +46,7 @@ public sealed class StartupsDeployCommand(ILogger<StartupsDeployCommand> logger)
         options.Subscription = parseResult.GetValueForOption(_subscription);
         options.ResourceGroup = parseResult.GetValueForOption(_resourceGroup);
         options.StorageAccount = parseResult.GetValueForOption(_storageAccount);
+        options.ResourceGroup = parseResult.GetValueForOption(_resourceGroup);
         options.SourcePath = parseResult.GetValueForOption(_sourcePath);
         return options;
     }
