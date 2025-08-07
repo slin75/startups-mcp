@@ -17,6 +17,10 @@ public sealed class StartupsDeployCommand(ILogger<StartupsDeployCommand> logger)
     private readonly Option<string> _resourceGroup = StartupsOptionDefinitions.ResourceGroup;
     private readonly Option<string> _sourcePath = StartupsOptionDefinitions.SourcePath;
     private readonly Option<bool> _overwrite = StartupsOptionDefinitions.Overwrite;
+    private readonly Option<string> _deploymentType = StartupsOptionDefinitions.DeployType;
+    private readonly Option<string> _reactProject = StartupsOptionDefinitions.ReactProject;
+    private readonly Option<bool> _build = StartupsOptionDefinitions.Build;
+    private readonly Option<string> _buildPath = StartupsOptionDefinitions.BuildPath;
     public override string Name => "deploy";
     public override string Description =>
         """
@@ -37,6 +41,10 @@ public sealed class StartupsDeployCommand(ILogger<StartupsDeployCommand> logger)
         command.AddOption(_resourceGroup);
         command.AddOption(_sourcePath);
         command.AddOption(_overwrite);
+        command.AddOption(_deploymentType);
+        command.AddOption(_reactProject);
+        command.AddOption(_build);
+        command.AddOption(_buildPath);
     }
 
     protected override StartupsDeployOptions BindOptions(ParseResult parseResult)
@@ -48,12 +56,17 @@ public sealed class StartupsDeployCommand(ILogger<StartupsDeployCommand> logger)
         options.ResourceGroup = parseResult.GetValueForOption(_resourceGroup);
         options.SourcePath = parseResult.GetValueForOption(_sourcePath);
         options.Overwrite = parseResult.GetValueForOption(_overwrite);
+        options.DeployType = parseResult.GetValueForOption(_deploymentType);
+        options.ReactProject = parseResult.GetValueForOption(_reactProject);
+        options.Build = parseResult.GetValueForOption(_build);
+        options.BuildPath = parseResult.GetValueForOption(_buildPath);
         return options;
     }
 
     [McpServerTool(Destructive = false, ReadOnly = true, Title = CommandTitle)]
     public override async Task<CommandResponse> ExecuteAsync(CommandContext context, ParseResult parseResult)
     {
+
         var options = BindOptions(parseResult);
         var options = BindOptions(parseResult);
 
@@ -81,7 +94,6 @@ public sealed class StartupsDeployCommand(ILogger<StartupsDeployCommand> logger)
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error deploying static website to {StorageAccount}", options.StorageAccount);
             _logger.LogError(ex, "Error deploying static website to {StorageAccount}", options.StorageAccount);
             HandleException(context, ex);
         }
