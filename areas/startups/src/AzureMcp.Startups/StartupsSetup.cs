@@ -1,17 +1,19 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using AzureMcp.Areas.Startups.Commands;
-using AzureMcp.Areas.Startups.Commands.Guidance;
-using AzureMcp.Areas.Startups.Services;
-using AzureMcp.Commands;
+using AzureMcp.Core.Areas;
+using AzureMcp.Core.Commands;
+using AzureMcp.Startups.Commands;
+using AzureMcp.Startups.Commands.Guidance;
+using AzureMcp.Startups.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace AzureMcp.Areas.Startups
+namespace AzureMcp.Startups
 {
     public class StartupsSetup : IAreaSetup
     {
+        public string Name => "startups";
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IStartupsService, StartupsService>();

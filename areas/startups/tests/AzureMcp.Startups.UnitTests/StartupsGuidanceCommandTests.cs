@@ -4,9 +4,9 @@
 using System.CommandLine;
 using System.CommandLine.Parsing;
 using System.Text.Json;
-using AzureMcp.Areas.Startups.Commands.Guidance;
-using AzureMcp.Areas.Startups.Services;
-using AzureMcp.Models.Command;
+using AzureMcp.Core.Models.Command;
+using AzureMcp.Startups.Commands.Guidance;
+using AzureMcp.Startups.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;

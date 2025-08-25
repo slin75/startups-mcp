@@ -1,18 +1,18 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using AzureMcp.Options;
+using Azure;
+using Azure.ResourceManager.Resources;
 using Azure.ResourceManager.Storage;
 using Azure.ResourceManager.Storage.Models;
-using Azure; // WaitUntil
-using AzureMcp.Services.Azure.Subscription;
-using AzureMcp.Services.Azure.Tenant;
 using Azure.Storage.Blobs;
-using AzureMcp.Services.Azure;
-using Azure.ResourceManager.Resources;
 using Azure.Storage.Blobs.Models;
+using AzureMcp.Core.Options;
+using AzureMcp.Core.Services.Azure;
+using AzureMcp.Core.Services.Azure.Subscription;
+using AzureMcp.Core.Services.Azure.Tenant;
 
-namespace AzureMcp.Areas.Startups.Services
+namespace AzureMcp.Startups.Services
 {
     public sealed class StartupsService(ISubscriptionService subscriptionService, ITenantService tenantService) : BaseAzureService(tenantService), IStartupsService
     {

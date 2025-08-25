@@ -1,12 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using AzureMcp.Areas.Startups.Options;
-using AzureMcp.Areas.Startups.Services;
-using AzureMcp.Commands.Subscription;
+using AzureMcp.Core.Commands;
+using AzureMcp.Core.Commands.Subscription;
+using AzureMcp.Startups.Options;
+using AzureMcp.Startups.Services;
 using Microsoft.Extensions.Logging;
 
-namespace AzureMcp.Areas.Startups.Commands;
+namespace AzureMcp.Startups.Commands;
 
 public sealed class StartupsDeployCommand(ILogger<StartupsDeployCommand> logger) : SubscriptionCommand<StartupsDeployOptions>()
 {
@@ -24,6 +25,12 @@ public sealed class StartupsDeployCommand(ILogger<StartupsDeployCommand> logger)
         and uploads content from the specified directory.
         """;
     public override string Title => CommandTitle;
+
+    public override ToolMetadata Metadata => new()
+    {
+        Destructive = true,
+        ReadOnly = false
+    };
 
     protected override void RegisterOptions(Command command)
     {
