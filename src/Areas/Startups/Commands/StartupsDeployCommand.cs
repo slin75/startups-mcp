@@ -14,7 +14,6 @@ public sealed class StartupsDeployCommand(ILogger<StartupsDeployCommand> logger)
     private readonly ILogger<StartupsDeployCommand> _logger = logger;
     private readonly Option<string> _storageAccount = StartupsOptionDefinitions.StorageAccount;
     private readonly Option<string> _resourceGroup = StartupsOptionDefinitions.ResourceGroup;
-    private readonly Option<string> _resourceGroup = StartupsOptionDefinitions.ResourceGroup;
     private readonly Option<string> _sourcePath = StartupsOptionDefinitions.SourcePath;
     private readonly Option<bool> _overwrite = StartupsOptionDefinitions.Overwrite;
     public override string Name => "deploy";
@@ -34,7 +33,6 @@ public sealed class StartupsDeployCommand(ILogger<StartupsDeployCommand> logger)
         base.RegisterOptions(command);
         command.AddOption(_storageAccount);
         command.AddOption(_resourceGroup);
-        command.AddOption(_resourceGroup);
         command.AddOption(_sourcePath);
         command.AddOption(_overwrite);
     }
@@ -42,8 +40,6 @@ public sealed class StartupsDeployCommand(ILogger<StartupsDeployCommand> logger)
     protected override StartupsDeployOptions BindOptions(ParseResult parseResult)
     {
         var options = base.BindOptions(parseResult);
-        options.Subscription = parseResult.GetValueForOption(_subscription);
-        options.ResourceGroup = parseResult.GetValueForOption(_resourceGroup);
         options.StorageAccount = parseResult.GetValueForOption(_storageAccount);
         options.ResourceGroup = parseResult.GetValueForOption(_resourceGroup);
         options.SourcePath = parseResult.GetValueForOption(_sourcePath);

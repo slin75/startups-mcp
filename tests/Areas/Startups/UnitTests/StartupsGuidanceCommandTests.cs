@@ -40,7 +40,7 @@ public sealed class StartupsGuidanceCommandTests
     {
         // Act
         var command = _command.GetCommand();
-        
+
         // Assert
         Assert.Equal("get", command.Name);
         Assert.NotNull(command.Description);
@@ -62,7 +62,7 @@ public sealed class StartupsGuidanceCommandTests
         Assert.Equal(200, response.Status);
         Assert.Equal("Success", response.Message);
         Assert.NotNull(response.Results);
-        
+
         // Verify the guidance content
         var guidanceJson = JsonSerializer.Serialize(response.Results);
         Assert.Contains("Microsoft for Startups", guidanceJson);
